@@ -1,0 +1,47 @@
+<div [formGroup]="form">
+
+    <ng-template #formTmpl
+                 let-index="index">
+      <label [attr.for]="fieldId(index)">{{ fieldLabel(index) }}</label>
+  
+      <div [ngSwitch]="field.controlType">
+  
+        <input *ngSwitchCase="'textbox'"
+               [formControl]="fieldControl(index)"
+               [placeholder]="field.placeholder"
+               [attr.min]="field['min']"
+               [attr.max]="field['max']"
+               [attr.pattern]="field['pattern']"
+               [id]="fieldId(index)"
+               [type]="field['type']">
+  
+        <select [id]="field.key"
+                *ngSwitchCase="'dropdown'"
+                [formControl]="fieldControl(index)">
+          <option value=""
+                  disabled
+                  *ngIf="!!field.placeholder"
+                  selected>{{ field.placeholder }}</option>
+          <option *ngFor="let opt of field['options']"
+                  [value]="opt.key">{{ opt.value }}</option>
+        </select>
+  
+        <textarea *ngSwitchCase="'textarea'"
+                  [formControl]="fieldControl(index)"
+                  [id]="field.key"
+                  [cols]="field['cols']"
+                  [rows]="field['rows']"
+                  [maxlength]="field['maxlength']"
+                  [minlength]="field['minlength']"
+                  [placeholder]="field.placeholder"></textarea>
+      </div>
+  
+      <div class="errorMessage"
+           *ngIf="!isValid">{{ field.label }} is required</div>
+  
+    </ng-template>
+  
+    <div *ngIf="field.iterable; else formTmpl">
+    </div>
+  
+  </div>
